@@ -40,14 +40,16 @@ export const INCOME_CATEGORIES = [
 ]
 
 export const CURRENCIES = [
-  { code: 'INR', symbol: '₹', name: 'Indian Rupee' },
-  { code: 'USD', symbol: '$', name: 'US Dollar' },
-  { code: 'EUR', symbol: '€', name: 'Euro' },
+  { code: 'INR', symbol: '₹', name: 'Indian Rupee', locale: 'en-IN' },
+  { code: 'AED', symbol: 'AED', name: 'UAE Dirham', locale: 'en-AE' },
+  { code: 'USD', symbol: '$', name: 'US Dollar', locale: 'en-US' },
+  { code: 'EUR', symbol: '€', name: 'Euro', locale: 'en-IE' },
 ]
 
 export const DEFAULT_SETTINGS = {
-  name: 'Famil',
+  name: '',
   currency: 'INR',
+  monthlyBudget: 0,
 }
 
 export const CATEGORY_COLORS = Object.fromEntries(

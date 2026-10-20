@@ -49,3 +49,26 @@ export async function shareText(text) {
     return 'failed'
   }
 }
+
+function csvCell(value) {
+  const text = String(value ?? '')
+  return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
+}
+
+export function buildTransactionsCsv(transactions) {
+  const rows = [
+    ['Date', 'Time', 'Type', 'Category', 'Note', 'Amount'],
+    ...transactions.map((t) => [t.date, t.time, t.type, t.category, t.note, t.amount]),
+  ]
+  return rows.map((row) => row.map(csvCell).join(',')).join('\n')
+}
+
+export function downloadFile(contents, filename, type) {
+  const blob = new Blob([contents], { type })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  link.click()
+  URL.revokeObjectURL(url)
+}

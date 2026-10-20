@@ -59,3 +59,47 @@ export function generateSeedTransactions() {
     tx('expense', 1500, 'Household', 'Kitchen supplies', previousMonth(18), '11:15'),
   ]
 }
+
+function daysFromNow(days) {
+  return toLocalISODate(new Date(Date.now() + days * 86400000))
+}
+
+function loan(direction, person, amount, date, dueDate, note, payments = []) {
+  counter += 1
+  const createdAt = new Date().toISOString()
+  return {
+    id: `seed-loan-${counter}`,
+    direction,
+    person,
+    amount,
+    date,
+    dueDate,
+    note,
+    payments: payments.map(([paid, paidOn, paidNote = ''], i) => ({
+      id: `seed-payment-${counter}-${i}`,
+      amount: paid,
+      date: paidOn,
+      note: paidNote,
+    })),
+    createdAt,
+    updatedAt: createdAt,
+  }
+}
+
+export function generateSeedLoans() {
+  counter = 0
+  return [
+    loan('lent', 'Rahul', 5000, daysAgo(20), daysAgo(3), 'Bike repair'),
+    loan('lent', 'Anjali', 3000, daysAgo(12), daysFromNow(10), 'Concert tickets', [
+      [1000, daysAgo(4), 'Paid via UPI'],
+    ]),
+    loan('borrowed', 'Dad', 10000, daysAgo(30), daysFromNow(25), 'Laptop down payment', [
+      [4000, daysAgo(8)],
+    ]),
+    loan('lent', 'Rahul', 800, daysAgo(2), '', 'Lunch'),
+    loan('borrowed', 'Sneha', 1500, daysAgo(6), daysFromNow(2), 'Trip share'),
+    loan('lent', 'Vikram', 2000, daysAgo(45), daysAgo(20), 'Rent help', [
+      [2000, daysAgo(18), 'Returned in cash'],
+    ]),
+  ]
+}

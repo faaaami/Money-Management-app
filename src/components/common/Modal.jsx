@@ -35,13 +35,13 @@ export default function Modal({ open, onClose, title, description, children }) {
         type="button"
         tabIndex={-1}
         aria-hidden="true"
-        className="absolute inset-0 bg-slate-900/40"
+        className="animate-fade absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
         onClick={onClose}
       />
       <div
         ref={panelRef}
         tabIndex={-1}
-        className="relative max-h-[92vh] w-full overflow-y-auto rounded-t-2xl bg-white shadow-xl outline-none sm:max-w-md sm:rounded-2xl"
+        className="animate-sheet relative max-h-[92vh] w-full overflow-y-auto rounded-t-3xl bg-white shadow-2xl outline-none sm:max-w-md sm:rounded-3xl"
       >
         <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-5 py-4 sm:px-6">
           <div>

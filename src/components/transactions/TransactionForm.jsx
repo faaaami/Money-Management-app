@@ -4,7 +4,7 @@ import { useSettings } from '../../hooks/useSettings'
 import { useToast } from '../../hooks/useToast'
 import { useTransactions } from '../../hooks/useTransactions'
 import { toLocalISODate, toLocalTimeString } from '../../utils/date'
-import { getCurrency } from '../../utils/format'
+import { amountPaddingClass, getCurrency } from '../../utils/format'
 import Button from '../common/Button'
 import { Field, Input, Select } from '../common/FormControls'
 import Modal from '../common/Modal'
@@ -145,7 +145,7 @@ function FormContent({ transaction, initialType, onClose }) {
             error={errors.amount}
             value={form.amount}
             onChange={(e) => setField('amount', e.target.value)}
-            className="pl-8 text-lg font-semibold"
+            className={`${amountPaddingClass(settings.currency)} text-lg font-semibold`}
           />
         </div>
       </Field>

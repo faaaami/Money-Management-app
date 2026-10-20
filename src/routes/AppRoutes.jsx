@@ -4,6 +4,7 @@ import { Loader2 } from 'lucide-react'
 import AppShell from '../components/layout/AppShell'
 
 const Dashboard = lazy(() => import('../pages/Dashboard'))
+const Loans = lazy(() => import('../pages/Loans'))
 const Reports = lazy(() => import('../pages/Reports'))
 const Settings = lazy(() => import('../pages/Settings'))
 const Transactions = lazy(() => import('../pages/Transactions'))
@@ -29,6 +30,7 @@ export default function AppRoutes() {
         >
           <Route path="/" element={<Dashboard />} />
           <Route path="/transactions" element={<Transactions />} />
+          <Route path="/loans" element={<Loans />} />
           <Route path="/reports" element={<Reports />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/" replace />} />

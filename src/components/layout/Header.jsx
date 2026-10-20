@@ -1,30 +1,31 @@
 import { NavLink } from 'react-router-dom'
-import { UserRound } from 'lucide-react'
+import { Wallet } from 'lucide-react'
 import { APP_NAME } from '../../constants'
 import { useSettings } from '../../hooks/useSettings'
+import { getInitials } from '../../utils/loans'
 
 export default function Header() {
   const { settings } = useSettings()
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between gap-4 border-b border-slate-200 bg-white/95 px-4 backdrop-blur sm:px-6">
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between gap-4 border-b border-slate-200/80 bg-white/80 px-4 backdrop-blur-lg sm:px-6">
       <NavLink to="/" className="flex items-center gap-2.5">
-        <span className="flex size-8 items-center justify-center rounded-lg bg-primary-600 text-sm font-bold text-white">
-          ₹
+        <span className="flex size-9 items-center justify-center rounded-xl bg-linear-to-br from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-600/25">
+          <Wallet className="size-5" />
         </span>
-        <span className="text-base font-semibold text-slate-900">{APP_NAME}</span>
+        <span className="text-base font-bold tracking-tight text-slate-900">{APP_NAME}</span>
       </NavLink>
 
       <NavLink
         to="/settings"
-        className="flex items-center gap-2.5 rounded-xl p-1 transition-colors hover:bg-slate-100 sm:pr-3"
+        className="flex items-center gap-2.5 rounded-full p-1 transition-colors hover:bg-slate-100 sm:pr-3"
         aria-label="Open settings"
       >
-        <span className="hidden text-sm font-medium text-slate-600 sm:block">
-          {settings.name}
+        <span className="flex size-8 items-center justify-center rounded-full bg-linear-to-br from-slate-700 to-slate-900 text-xs font-semibold text-white">
+          {getInitials(settings.name)}
         </span>
-        <span className="flex size-8 items-center justify-center rounded-full bg-slate-100 text-slate-600">
-          <UserRound className="size-4" />
+        <span className="hidden text-sm font-medium text-slate-700 sm:block">
+          {settings.name}
         </span>
       </NavLink>
     </header>

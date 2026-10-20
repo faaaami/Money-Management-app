@@ -1,5 +1,14 @@
 import { useMemo, useState } from 'react'
-import { Pencil, Plus, ReceiptText, Share2, Trash2, X } from 'lucide-react'
+import {
+  FileSpreadsheet,
+  Pencil,
+  Plus,
+  ReceiptText,
+  Search,
+  Share2,
+  Trash2,
+  X,
+} from 'lucide-react'
 import Button from '../components/common/Button'
 import Card from '../components/common/Card'
 import ConfirmDialog from '../components/common/ConfirmDialog'
@@ -11,13 +20,18 @@ import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../constants'
 import { useSettings } from '../hooks/useSettings'
 import { useToast } from '../hooks/useToast'
 import { useTransactions } from '../hooks/useTransactions'
-import { formatRelativeDate, formatTime } from '../utils/date'
+import { formatRelativeDate, formatTime, toLocalISODate } from '../utils/date'
 import { formatCurrency } from '../utils/format'
 import {
   filterTransactions,
   getSortedTransactions,
 } from '../utils/finance'
-import { buildTransactionSummary, shareText } from '../utils/share'
+import {
+  buildTransactionSummary,
+  buildTransactionsCsv,
+  downloadFile,
+  shareText,
+} from '../utils/share'
 
 const TYPE_FILTERS = [
   { value: 'all', label: 'All' },
@@ -46,6 +60,7 @@ const EMPTY_FILTERS = {
   datePreset: 'all',
   from: '',
   to: '',
+  search: '',
 }
 
 export default function Transactions() {
@@ -89,6 +104,23 @@ export default function Transactions() {
     showToast('Transaction deleted')
   }
 
+  const handleExportCsv = () => {
+    downloadFile(
+      buildTransactionsCsv(filtered),
+      `transactions-${toLocalISODate()}.csv`,
+      'text/csv;charset=utf-8',
+    )
+    showToast(`Exported ${filtered.length} transactions`)
+  }
+
+  const filteredTotals = filtered.reduce(
+    (acc, t) => {
+      acc[t.type] += t.amount
+      return acc
+    },
+    { income: 0, expense: 0 },
+  )
+
   const handleShare = async (transaction) => {
     const status = await shareText(
       buildTransactionSummary(transaction, settings.currency),
@@ -109,13 +141,32 @@ export default function Transactions() {
             {transactions.length === 1 ? 'transaction' : 'transactions'} recorded
           </p>
         </div>
-        <Button onClick={handleAdd}>
-          <Plus className="size-4" />
-          Add Transaction
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="secondary" onClick={handleExportCsv} disabled={!filtered.length}>
+            <FileSpreadsheet className="size-4" />
+            <span className="hidden sm:inline">Export CSV</span>
+          </Button>
+          <Button onClick={handleAdd}>
+            <Plus className="size-4" />
+            Add Transaction
+          </Button>
+        </div>
       </div>
 
       <div className="space-y-3">
+        <div className="relative">
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+          <Input
+            id="transaction-search"
+            type="search"
+            placeholder="Search notes, categories or amounts"
+            aria-label="Search transactions"
+            value={filters.search}
+            onChange={(e) => setFilter('search', e.target.value)}
+            className="pl-10"
+          />
+        </div>
+
         <div className="flex flex-wrap items-end gap-3">
           <div className="flex rounded-xl bg-slate-100 p-1">
             {TYPE_FILTERS.map(({ value, label }) => (
@@ -236,6 +287,19 @@ export default function Transactions() {
         </Card>
       ) : (
         <>
+          {hasFilters && (
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 rounded-xl bg-white px-4 py-2.5 text-sm shadow-card ring-1 ring-slate-200">
+              <span className="font-medium text-slate-700">
+                {filtered.length} {filtered.length === 1 ? 'result' : 'results'}
+              </span>
+              <span className="tabular-nums text-income">
+                +{formatCurrency(filteredTotals.income, settings.currency)}
+              </span>
+              <span className="tabular-nums text-expense">
+                -{formatCurrency(filteredTotals.expense, settings.currency)}
+              </span>
+            </div>
+          )}
           <div className="hidden overflow-hidden rounded-card border border-slate-200 bg-white shadow-card md:block">
             <table className="w-full text-left text-sm">
               <thead>

@@ -1,8 +1,9 @@
-import { BarChart3, LayoutDashboard, Receipt, Settings } from 'lucide-react'
+import { BarChart3, HandCoins, LayoutDashboard, Receipt, Settings } from 'lucide-react'
 
 export const NAV_ITEMS = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
-  { to: '/transactions', label: 'Transactions', icon: Receipt },
-  { to: '/reports', label: 'Reports', icon: BarChart3 },
-  { to: '/settings', label: 'Settings', icon: Settings },
+  { to: '/', label: 'Dashboard', shortLabel: 'Home', icon: LayoutDashboard, end: true },
+  { to: '/transactions', label: 'Transactions', shortLabel: 'History', icon: Receipt },
+  { to: '/loans', label: 'Lend & Borrow', shortLabel: 'Loans', icon: HandCoins },
+  { to: '/reports', label: 'Reports', shortLabel: 'Reports', icon: BarChart3 },
+  { to: '/settings', label: 'Settings', shortLabel: 'Settings', icon: Settings },
 ]

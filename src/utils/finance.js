@@ -55,8 +55,9 @@ export function getMonthlyHistory(transactions, limit = 6) {
 
 export function filterTransactions(
   transactions,
-  { type = 'all', category = 'all', datePreset = 'all', from = '', to = '' } = {},
+  { type = 'all', category = 'all', datePreset = 'all', from = '', to = '', search = '' } = {},
 ) {
+  const query = search.trim().toLowerCase()
   const range =
     datePreset === 'custom'
       ? { from: from || null, to: to || null }
@@ -65,6 +66,13 @@ export function filterTransactions(
   return transactions.filter((t) => {
     if (type !== 'all' && t.type !== type) return false
     if (category !== 'all' && t.category !== category) return false
+    if (
+      query &&
+      !t.note.toLowerCase().includes(query) &&
+      !t.category.toLowerCase().includes(query) &&
+      !String(t.amount).includes(query)
+    )
+      return false
     if (range) {
       if (range.from && t.date < range.from) return false
       if (range.to && t.date > range.to) return false
